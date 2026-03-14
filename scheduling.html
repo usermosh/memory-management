@@ -31,13 +31,7 @@
             background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; width: auto; margin: 0;
         }
         .top-menu button.active { background: #00f2ff; color: #000; box-shadow: 0 0 15px rgba(0,242,255,0.6); }
-        .back-button {
-            position: fixed; bottom: 30px; left: 30px; padding: 12px 25px;
-            font-weight: 700; background: rgba(255,255,255,0.08); color: white;
-            border-radius: 100px; text-decoration: none; backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; z-index: 1100; font-family: 'Inter', sans-serif;
-        }
-        .back-button:hover { background: #00f2ff; color: #000; }
+        .back-button { display: none; }
         h2 { font-family: 'Archivo Black', sans-serif; font-size: clamp(2rem,6vw,3.5rem); margin-bottom: 40px; text-transform: uppercase; letter-spacing: -1px; }
         h3 { font-family: 'Archivo Black', sans-serif; margin: 50px 0 20px; color: #00f2ff; font-size: 1.4rem; text-transform: uppercase; }
         .form-section {
@@ -53,13 +47,22 @@
             appearance: none; -webkit-appearance: none;
         }
         select option { background: #1a0840; }
+        .btn-row { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
         .run-btn {
             background: #00f2ff; color: #000; border: none; cursor: pointer;
-            font-weight: 800; text-transform: uppercase; margin-top: 30px;
-            padding: 16px; border-radius: 15px; width: 100%; font-size: 0.95rem;
+            font-weight: 800; text-transform: uppercase;
+            padding: 16px; border-radius: 15px; flex: 1; min-width: 140px; font-size: 0.95rem;
             box-shadow: 0 5px 20px rgba(0,242,255,0.3); transition: 0.3s; font-family: 'Inter', sans-serif;
         }
         .run-btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .reset-btn {
+            background: rgba(255,60,80,0.12); color: #ff6b8a; border: 1px solid rgba(255,60,80,0.3);
+            cursor: pointer; font-weight: 800; text-transform: uppercase;
+            padding: 16px 22px; border-radius: 15px; font-size: 0.95rem;
+            transition: 0.3s; font-family: 'Inter', sans-serif; white-space: nowrap;
+        }
+        .reset-btn:hover { background: rgba(255,60,80,0.28); transform: translateY(-3px); }
+        @media(max-width:560px) { .btn-row { flex-direction: column; } }
         .process-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; }
         .process-card {
             padding: 20px; border-top: 3px solid #00f2ff;
@@ -100,7 +103,6 @@
     <button id="tab-nonpreemptive" onclick="switchTab('nonpreemptive')">Non-Preemptive</button>
 </div>
 
-<a href="index.html" class="back-button">← BACK</a>
 
 <h2>CPU SCHEDULING</h2>
 
@@ -122,7 +124,11 @@
 
     <div id="process-container" class="process-grid"></div>
 
-    <button class="run-btn" onclick="runScheduling()">▶ Run Scheduling</button>
+    <div class="btn-row">
+        <a href="index.html" class="run-btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.15);box-shadow:none;">← Back</a>
+        <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+        <button class="run-btn" onclick="runScheduling()">▶ Run</button>
+    </div>
 </div>
 
 <div id="results"></div>
@@ -368,6 +374,15 @@ function renderResults(processes, gantt, algo, num) {
 
     document.getElementById('results').innerHTML = html;
     document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetAll() {
+    document.getElementById('process-container').innerHTML = '';
+    document.getElementById('num_process').value = '';
+    document.getElementById('quantum-field').style.display = 'none';
+    document.getElementById('results').innerHTML = '';
+    const algo = document.getElementById('algorithm').value;
+    if (algo === 'RR') document.getElementById('time_quantum').value = '';
 }
 </script>
 </body>
